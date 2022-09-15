@@ -1,6 +1,9 @@
 namespace SpriteKind {
     export const backround = SpriteKind.create()
 }
+scene.onHitWall(SpriteKind.backround, function (sprite, location) {
+    sprite.destroy()
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     laser = sprites.createProjectileFromSprite(assets.image`laser`, Shark, 100, 0)
     laser.setKind(SpriteKind.Projectile)
@@ -215,9 +218,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     true_or_false = true
 })
 let submerine: Sprite = null
+let seawead: Sprite = null
 let fish_food: Sprite = null
 let laser: Sprite = null
-let seawead: Sprite = null
 let Shark: Sprite = null
 let true_or_false = false
 game.setDialogFrame(img`
@@ -299,12 +302,9 @@ Shark = sprites.create(assets.image`shark`, SpriteKind.Player)
 controller.moveSprite(Shark)
 Shark.setStayInScreen(true)
 info.setLife(5)
+scene.setBackgroundColor(8)
 scene.setBackgroundImage(assets.image`ocean1`)
 tiles.setCurrentTilemap(tilemap`level1`)
-for (let index = 0; index < 10; index++) {
-    seawead = sprites.create(assets.image`decoration`, SpriteKind.backround)
-    seawead.setPosition(randint(0, 160), 96)
-}
 animation.runImageAnimation(
 Shark,
 assets.animation`swim right`,
@@ -333,18 +333,20 @@ forever(function () {
     }
 })
 forever(function () {
-    scene.setBackgroundColor(6)
-    pause(9000)
-    scene.setBackgroundColor(8)
-    pause(9000)
-    scene.setBackgroundColor(15)
-    pause(9000)
-    scene.setBackgroundColor(8)
-})
-forever(function () {
     if (info.score() >= 15) {
         scene.setBackgroundImage(assets.image`ocean2`)
     }
+})
+forever(function () {
+    scroller.scrollBackgroundWithSpeed(-50, 0)
+})
+forever(function () {
+    for (let index = 0; index < 10; index++) {
+        seawead = sprites.create(assets.image`decoration`, SpriteKind.backround)
+        seawead.setPosition(randint(0, 160), 96)
+        seawead.setVelocity(-50, 0)
+    }
+    pause(2000)
 })
 game.onUpdateInterval(500, function () {
     submerine = sprites.create(assets.image`enemy`, SpriteKind.Enemy)
